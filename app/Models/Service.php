@@ -66,4 +66,9 @@ class Service extends Model
     {
         return $this->belongsToMany(User::class, 'service_worker');
     }
+
+    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Order::class);
+    }
 }

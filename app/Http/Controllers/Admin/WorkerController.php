@@ -71,8 +71,12 @@ class WorkerController extends Controller
 
         $worker->load(['workerProfile', 'skills', 'services']);
         
-        $activeOrdersCount = 0;
-        $completedOrdersCount = 0;
+        $activeOrdersCount = \App\Models\Order::where('worker_id', $worker->id)
+            ->whereNotIn('status', ['completed', 'cancelled'])
+            ->count();
+        $completedOrdersCount = \App\Models\Order::where('worker_id', $worker->id)
+            ->where('status', 'completed')
+            ->count();
 
         return Inertia::render('Admin/Workers/Show', [
             'worker' => $worker,

@@ -44,6 +44,11 @@ class RegisteredUserController extends Controller
             'role' => \App\Enums\UserRole::Client->value,
         ]);
 
+        \App\Models\Wallet::create([
+            'user_id' => $user->id,
+            'balance' => 0,
+        ]);
+
         event(new Registered($user));
 
         Auth::login($user);

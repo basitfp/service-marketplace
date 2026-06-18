@@ -480,5 +480,5 @@ export default function Show({
 Show.layout = page => <AdminLayout breadcrumbs={[
             { label: 'Admin', href: route('admin.dashboard') },
             { label: 'Orders', href: route('admin.orders.index') },
-            { label: `#${order.id}` },
+            { label: `#${page.props.order.id}` },
         ]}>{page}</AdminLayout>;

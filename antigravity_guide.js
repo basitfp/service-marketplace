@@ -135,28 +135,38 @@ const doc = new Document({
     config: [
       {
         reference: "bullets",
-        levels: [{ level: 0, format: LevelFormat.BULLET, text: "\u2022", alignment: AlignmentType.LEFT,
-          style: { paragraph: { indent: { left: 720, hanging: 360 } } } }]
+        levels: [{
+          level: 0, format: LevelFormat.BULLET, text: "\u2022", alignment: AlignmentType.LEFT,
+          style: { paragraph: { indent: { left: 720, hanging: 360 } } }
+        }]
       },
       {
         reference: "numbers",
-        levels: [{ level: 0, format: LevelFormat.DECIMAL, text: "%1.", alignment: AlignmentType.LEFT,
-          style: { paragraph: { indent: { left: 720, hanging: 360 } } } }]
+        levels: [{
+          level: 0, format: LevelFormat.DECIMAL, text: "%1.", alignment: AlignmentType.LEFT,
+          style: { paragraph: { indent: { left: 720, hanging: 360 } } }
+        }]
       }
     ]
   },
   styles: {
     default: { document: { run: { font: "Calibri", size: 22 } } },
     paragraphStyles: [
-      { id: "Heading1", name: "Heading 1", basedOn: "Normal", next: "Normal", quickFormat: true,
+      {
+        id: "Heading1", name: "Heading 1", basedOn: "Normal", next: "Normal", quickFormat: true,
         run: { size: 36, bold: true, font: "Calibri", color: "0F172A" },
-        paragraph: { spacing: { before: 400, after: 160 }, outlineLevel: 0 } },
-      { id: "Heading2", name: "Heading 2", basedOn: "Normal", next: "Normal", quickFormat: true,
+        paragraph: { spacing: { before: 400, after: 160 }, outlineLevel: 0 }
+      },
+      {
+        id: "Heading2", name: "Heading 2", basedOn: "Normal", next: "Normal", quickFormat: true,
         run: { size: 28, bold: true, font: "Calibri", color: "1E40AF" },
-        paragraph: { spacing: { before: 280, after: 120 }, outlineLevel: 1 } },
-      { id: "Heading3", name: "Heading 3", basedOn: "Normal", next: "Normal", quickFormat: true,
+        paragraph: { spacing: { before: 280, after: 120 }, outlineLevel: 1 }
+      },
+      {
+        id: "Heading3", name: "Heading 3", basedOn: "Normal", next: "Normal", quickFormat: true,
         run: { size: 24, bold: true, font: "Calibri", color: "1E3A5F" },
-        paragraph: { spacing: { before: 200, after: 80 }, outlineLevel: 2 } },
+        paragraph: { spacing: { before: 200, after: 80 }, outlineLevel: 2 }
+      },
     ]
   },
   sections: [{
@@ -1922,14 +1932,14 @@ const doc = new Document({
 
 
       // ═══════════════════════════════════════════════════════════════════════════
-// CONTINUATION — PASTE THIS BLOCK INTO antigravity_guide.js
-// Replace the existing PHASES 9–15 ABBREVIATED section and everything
-// after it (starting from the "PHASES 9–15 — Client Portal..." H1) up to
-// but NOT including the KNOWLEDGE BASE SAVE SCHEDULE H1.
-//
-// Insertion point: immediately after the Phase 8 HR() on line ~1921,
-// replacing lines 1922–1930 (the abbreviated summary section).
-// ═══════════════════════════════════════════════════════════════════════════
+      // CONTINUATION — PASTE THIS BLOCK INTO antigravity_guide.js
+      // Replace the existing PHASES 9–15 ABBREVIATED section and everything
+      // after it (starting from the "PHASES 9–15 — Client Portal..." H1) up to
+      // but NOT including the KNOWLEDGE BASE SAVE SCHEDULE H1.
+      //
+      // Insertion point: immediately after the Phase 8 HR() on line ~1921,
+      // replacing lines 1922–1930 (the abbreviated summary section).
+      // ═══════════════════════════════════════════════════════════════════════════
 
       // ═══════════════════════════════════════
       // PHASE 9
@@ -3250,6 +3260,72 @@ const doc = new Document({
         "  Has export button (where applicable)",
         "",
         "Fix any violations found during the audit.",
+      ]),
+      PROMPT_END(),
+      BREAK(),
+
+      H2("Phase 15 — Step 1A: Layout & Dashboard UX Optimization"),
+      PROMPT_LABEL("TASK: Phase 15, Step 1A"),
+      ...PROMPT([
+        "Task: Improve overall layout quality, dashboard usability, visual hierarchy, and navigation consistency across all three portals.",
+        "",
+        "IMPORTANT:",
+        "Current Admin Portal layout and sidebar are considered the baseline reference implementation.",
+        "Use the Admin Portal layout quality, spacing, navigation behavior, and visual structure as the standard.",
+        "Employee Portal and Client Portal must match the same level of polish and usability.",
+        "",
+        "SIDEBAR OPTIMIZATION:",
+        "  Ensure all three portals use a consistent sidebar architecture",
+        "  Match spacing, typography, icon sizing, hover states, active states, and collapse behavior",
+        "  Remove visual clutter and unnecessary nesting",
+        "  Improve active menu highlighting visibility",
+        "  Ensure sidebar width remains consistent",
+        "  Verify responsive collapse behavior on tablet/mobile",
+        "  Add proper section grouping where needed",
+        "",
+        "LAYOUT OPTIMIZATION:",
+        "  Standardize page container widths",
+        "  Standardize content spacing between sections",
+        "  Improve card spacing and alignment",
+        "  Ensure visual balance across all screens",
+        "  Remove excessive whitespace and cramped layouts",
+        "  Verify consistent content max-width behavior",
+        "  Improve responsive layouts for laptop, tablet, and mobile",
+        "",
+        "DASHBOARD REDESIGN AUDIT:",
+        "  Review Admin, Employee, and Client dashboards individually",
+        "  Improve information hierarchy",
+        "  Most important metrics should appear above the fold",
+        "  Remove redundant widgets",
+        "  Group related widgets together",
+        "  Improve KPI card layouts",
+        "  Improve chart placement and sizing",
+        "  Improve responsiveness of dashboard grids",
+        "  Ensure dashboard feels modern and enterprise-grade",
+        "",
+        "CARD CONSISTENCY:",
+        "  All dashboard cards must use consistent padding",
+        "  Consistent border radius",
+        "  Consistent shadow levels",
+        "  Consistent header styling",
+        "  Consistent action button placement",
+        "",
+        "HEADER OPTIMIZATION:",
+        "  Standardize top navigation/header across portals",
+        "  Ensure proper alignment of notifications, profile menu, and actions",
+        "  Improve spacing and responsiveness",
+        "",
+        "USER EXPERIENCE REVIEW:",
+        "  Evaluate each screen from a real user perspective",
+        "  Reduce clicks where possible",
+        "  Improve discoverability of important actions",
+        "  Ensure primary actions are immediately visible",
+        "  Ensure dashboards communicate key information within 5 seconds",
+        "",
+        "FINAL REQUIREMENT:",
+        "  Do not merely make portals identical.",
+        "  Preserve portal-specific functionality.",
+        "  However, all portals must achieve the same design quality, visual polish, spacing consistency, navigation quality, responsiveness, and enterprise-grade user experience as the Admin Portal.",
       ]),
       PROMPT_END(),
       BREAK(),

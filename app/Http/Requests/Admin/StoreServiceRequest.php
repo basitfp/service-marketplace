@@ -26,7 +26,9 @@ class StoreServiceRequest extends FormRequest
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
             'is_deliverable' => 'boolean',
-            'dynamic_fields' => 'nullable|array',
+            'dynamic_fields'             => 'nullable|array',
+            'dynamic_fields.*.field_key' => 'required_with:dynamic_fields|string',
+            'dynamic_fields.*.value'     => 'nullable',
             'worker_ids' => 'nullable|array',
             'worker_ids.*' => 'exists:users,id',
         ];

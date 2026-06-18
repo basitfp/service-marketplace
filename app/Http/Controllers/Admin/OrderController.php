@@ -8,13 +8,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreOrderAssignRequest;
 use App\Models\Category;
 use App\Models\Order;
+use App\Models\OrderAsset;
 use App\Models\Service;
 use App\Models\User;
 use App\Services\OrderService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrderController extends Controller
 {
@@ -148,6 +151,18 @@ class OrderController extends Controller
         $this->orderService->cancel($order, $validated['reason'], $request->user());
 
         return redirect()->back()->with('success', 'Order cancelled successfully.');
+    }
+
+    // ── Download asset ────────────────────────────────────────────────
+
+    public function downloadAsset(Order $order, OrderAsset $asset): StreamedResponse
+    {
+        abort_unless($asset->order_id === $order->id, 404);
+
+        return Storage::disk('public')->download(
+            $asset->file_path,
+            $asset->original_name,
+        );
     }
 
     private function eligibleWorkersForService(int $serviceId)

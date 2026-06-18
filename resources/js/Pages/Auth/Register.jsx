@@ -102,6 +102,10 @@ export default function Register() {
                         Log in
                     </Link>
                 </div>
+
+                <div className="text-center mt-3 text-xs text-gray-400">
+                    Worker accounts are created by admin only.
+                </div>
             </Form>
         </AuthLayout>
     );

@@ -12,10 +12,12 @@ class OrderCancelledNotification extends Notification
     use Queueable;
 
     public Order $order;
+    public string $recipientRole;
 
-    public function __construct(Order $order)
+    public function __construct(Order $order, string $recipientRole = 'client')
     {
         $this->order = $order;
+        $this->recipientRole = $recipientRole;
     }
 
     public function via(object $notifiable): array
@@ -25,7 +27,9 @@ class OrderCancelledNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $message = "Order #{$this->order->id} has been cancelled.";
+        $message = $this->recipientRole === 'worker'
+            ? "Order #{$this->order->id} has been cancelled by admin."
+            : "Order #{$this->order->id} has been cancelled.";
 
         return (new MailMessage)
                     ->subject('Order Cancelled')
@@ -38,8 +42,9 @@ class OrderCancelledNotification extends Notification
     {
         return [
             'order_id' => $this->order->id,
+            'recipient_role' => $this->recipientRole,
             'message' => "Order #{$this->order->id} has been cancelled.",
-            'type' => 'order_cancelled'
+            'type' => 'order_cancelled',
         ];
     }
 }

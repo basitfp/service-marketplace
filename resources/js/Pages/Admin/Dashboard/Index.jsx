@@ -9,44 +9,11 @@ import {
 import ReactECharts from 'echarts-for-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import PageHeader from '@/Components/Common/PageHeader';
+import StatCard from '@/Components/Common/StatCard';
+import { STATUS_COLORS } from '@/Utils/constants';
 import dayjs from 'dayjs';
 
 const { Title, Text } = Typography;
-
-const STATUS_COLORS = {
-    pending: '#f59e0b',
-    assigned: '#3b82f6',
-    in_progress: '#8b5cf6',
-    completed: '#10b981',
-    cancelled: '#ef4444',
-};
-
-const StatCard = ({ title, value, trend, icon, colorClass, inverseTrend = false, isCurrency = false }) => {
-    const isPositive = trend >= 0;
-    const isGood = inverseTrend ? !isPositive : isPositive;
-    const trendColor = isGood ? 'text-emerald-500' : 'text-rose-500';
-    const TrendIcon = isPositive ? ArrowUpOutlined : ArrowDownOutlined;
-
-    return (
-        <Card bordered={false} className="shadow-sm rounded-xl hover:shadow-md transition-shadow duration-300 border border-gray-100 h-full">
-            <div className="flex items-center gap-4 mb-4">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl ${colorClass}`}>
-                    {icon}
-                </div>
-                <Text type="secondary" className="font-medium text-sm uppercase tracking-wider">{title}</Text>
-            </div>
-            <div className="flex items-end justify-between">
-                <Title level={2} className="!m-0 !text-3xl !font-bold">
-                    {isCurrency ? `$${Number(value).toLocaleString()}` : Number(value).toLocaleString()}
-                </Title>
-                <div className={`flex items-center gap-1 font-semibold ${trendColor} bg-opacity-10 px-2 py-1 rounded-md ${isGood ? 'bg-emerald-100' : 'bg-rose-100'}`}>
-                    <TrendIcon className="text-xs" />
-                    <span className="text-sm">{Math.abs(trend)}%</span>
-                </div>
-            </div>
-        </Card>
-    );
-};
 
 export default function Dashboard({ stats, charts, tables }) {
     // ECharts Configurations

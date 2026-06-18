@@ -49,6 +49,11 @@ class Category extends Model
         return $query->where('is_active', true);
     }
 
+    public function services(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\Service::class);
+    }
+
     public function fields()
     {
         return $this->hasMany(CategoryField::class);

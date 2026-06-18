@@ -8,11 +8,14 @@ use App\Events\OrderCancelled;
 use App\Events\OrderCompleted;
 use App\Events\OrderSubmitted;
 use App\Events\RevisionRequested;
+use App\Exceptions\InsufficientCreditsException;
 use App\Models\Order;
+use App\Models\OrderSelection;
 use App\Models\User;
 use App\Models\OrderAsset;
 use App\Models\Revision;
 use App\Models\Review;
+use App\Models\WalletTransaction;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
@@ -23,6 +26,85 @@ class OrderService
     public function __construct(WalletService $walletService)
     {
         $this->walletService = $walletService;
+    }
+
+    /**
+     * Place orders for all items in the client's cart.
+     *
+     * The entire operation is wrapped in a single DB transaction so that
+     * credit deduction and order creation are atomic — if anything fails,
+     * the whole checkout rolls back.
+     *
+     * @param  User  $client
+     * @param  array $cartItems  Array of cart item arrays (from session 'cart')
+     * @return int[]             IDs of the newly created orders
+     *
+     * @throws InsufficientCreditsException
+     */
+    public function checkout(User $client, array $cartItems): array
+    {
+        return DB::transaction(function () use ($client, $cartItems) {
+
+            // ── 1. Lock wallet row and verify balance ────────────────
+            $wallet = $client->wallet()->lockForUpdate()->firstOrCreate(
+                ['user_id' => $client->id],
+                ['balance'  => 0]
+            );
+
+            $totalCredits = collect($cartItems)->sum('total_credits');
+
+            if ($wallet->balance < $totalCredits) {
+                throw new InsufficientCreditsException();
+            }
+
+            // ── 2. Deduct credits atomically ─────────────────────────
+            $wallet->balance -= $totalCredits;
+            $wallet->save();
+
+            // ── 3. Create one Order + selections + transaction per item
+            $orderIds = [];
+
+            foreach ($cartItems as $item) {
+                // a) Create the order
+                $order = Order::create([
+                    'client_id'    => $client->id,
+                    'service_id'   => $item['service_id'],
+                    'credits_used' => $item['total_credits'],
+                    'status'       => OrderStatus::Pending,
+                    'notes'        => $item['notes'] ?? null,
+                ]);
+
+                // b) Create a selection row for each configured step option
+                foreach ($item['selections'] ?? [] as $sel) {
+                    OrderSelection::create([
+                        'order_id'     => $order->id,
+                        'step_id'      => $sel['step_id'],
+                        'step_name'    => $sel['step_name'],
+                        'option_id'    => $sel['option_id'],
+                        'option_label' => $sel['option_label'],
+                        'credit_cost'  => $sel['credit_cost'],
+                    ]);
+                }
+
+                // c) Record wallet transaction for this individual order
+                WalletTransaction::create([
+                    'user_id'     => $client->id,
+                    'order_id'    => $order->id,
+                    'type'        => 'order_payment',
+                    'credits'     => $item['total_credits'],
+                    'amount'      => null,
+                    'reference'   => "ORDER-{$order->id}",
+                    'description' => "Payment for Order #{$order->id}: {$item['service_name']}",
+                ]);
+
+                $orderIds[] = $order->id;
+            }
+
+            // ── 4. Clear the session cart ────────────────────────────
+            session()->forget('cart');
+
+            return $orderIds;
+        });
     }
 
     public function assign(Order $order, int $workerId, User $admin): Order

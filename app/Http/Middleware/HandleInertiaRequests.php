@@ -46,6 +46,9 @@ class HandleInertiaRequests extends Middleware
                     ->take(10)
                     ->get(),
             ] : null,
+            'cart' => [
+                'count' => count(session('cart', [])),
+            ],
         ];
     }
 }

@@ -34,6 +34,7 @@ Route::resource('workers', WorkerController::class);
 
 Route::post('orders/{order}/assign', [OrderController::class, 'assign'])->name('orders.assign');
 Route::post('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+Route::get('orders/{order}/assets/{asset}/download', [OrderController::class, 'downloadAsset'])->name('orders.assets.download');
 Route::resource('orders', OrderController::class)->only(['index', 'show']);
 
 Route::patch('credit-packages/{creditPackage}/toggle', [CreditPackageController::class, 'toggle'])->name('credit-packages.toggle');

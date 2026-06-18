@@ -2,9 +2,14 @@
 
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WebhookController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+// Stripe Webhook (OUTSIDE auth middleware)
+Route::post('/stripe/webhook', [WebhookController::class, 'handleStripe'])
+    ->name('stripe.webhook');
 
 Route::get('/', function () {
     return auth()->check()
